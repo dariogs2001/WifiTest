@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST = 1;
     public static String TAG = MainActivity.class.getSimpleName();
     Button mCheckSignalButton;
+    Button mClearButton;
     TextView mShowSignalTextView;
     TextView mMultiLine;
 
@@ -47,9 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
         mMultiLine = (TextView)findViewById(R.id.multi_line_text_view);
 
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_REQUEST);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST);
+        }
 
         mCheckSignalButton = (Button) findViewById(R.id.check_signal_button);
         mCheckSignalButton.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
                 mWifiManager.startScan();
             }
         });
+
+        mClearButton = (Button) findViewById(R.id.clear_button);
+        mClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mMultiLine.setText("");
+            }
+        });
+
     }
 
     public void onReceive(WifiManager wifiManager) {
